@@ -375,32 +375,43 @@ class MyApp(object):
 		
 		self.is_moving=True
 		self.wait_time=50
+		
+		self.table = []
+		self.current = 0
 	    
 	def enterFileName(self):
-		pass
+		fileName = "inputs/3premises.txt"
+	
+		f = open(fileName).readlines()
+		statements = parseInput(f)
+		self.table = solveTable(statements)		
 	
 	def prevStep(self):
-		pass
+		self.current -= 2
+		print(self.table[self.current])
+		self.current += 1
 	
 	def nextStep(self):
-		pass
+		print(self.table[self.current])
+		self.current += 1
 	
 	def finish(self):
-		pass
+		for i in range(self.current, len(self.table)):
+			print(self.table[i])
 	
 	
 	
 if __name__ == "__main__":
 	
-	#root = Tk()
-	#myapp=MyApp(root)
-	#root.mainloop()	
+	root = Tk()
+	myapp=MyApp(root)
+	root.mainloop()	
 	
-	fileName = "inputs/3premises.txt"
+	#fileName = "inputs/3premises.txt"
 
-	f = open(fileName).readlines()
-	statements = parseInput(f)
-	r = solveTable(statements)
+	#f = open(fileName).readlines()
+	#statements = parseInput(f)
+	#r = solveTable(statements)
 	
-	for i in r:
-		print(i)
+	#for i in r:
+		#print(i)
