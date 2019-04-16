@@ -346,7 +346,54 @@ def solveTable(statements):
 			print(str(statement + 1) + ': ' + str(statements[statement]))	
 
 
+class MyApp(object):
+	def __init__(self, parent):
+		self.parent = parent
+		self.main_frame = Frame(self.parent)  ##parent of this frame
+		self.main_frame.pack()  ##make this visible
+		  
+		self.top_frame = Frame(self.main_frame)
+		self.top_frame.pack(side=TOP)
+		
+		self.bottom_frame = Frame(self.main_frame)
+		self.bottom_frame.pack(side=BOTTOM)
+		
+		self.canvas = Canvas(self.top_frame, height=600, width=600)
+		self.canvas.pack()
+		
+		self.button1 = Button(self.bottom_frame, text="Enter File Name", command=self.enterFileName)
+		self.button1.pack(side=LEFT)
+		self.button2 = Button(self.bottom_frame, text="Prev Step", command=self.prevStep)
+		self.button2.pack(side=LEFT)
+		self.button3=Button(self.bottom_frame, text="Next Step", command=self.nextStep)
+		self.button3.pack(side=LEFT)
+		
+		self.button4=Button(self.bottom_frame, text="Finish", command=self.finish)
+		self.button4.pack(side=LEFT)
+		
+		self.is_moving=True
+		self.wait_time=50
+	    
+	def enterFileName(self):
+		pass	
+	
+	def prevStep(self):
+		pass
+	
+	def nextStep(self):
+		pass
+	
+	def finish(self):
+		pass
+	
+	
+	
 if __name__ == "__main__":
+	
+	root = Tk()
+	myapp=MyApp(root)
+	root.mainloop()	
+	
 	fileName = input("Enter input file: ")
 	
 	f = open(fileName).readlines()
