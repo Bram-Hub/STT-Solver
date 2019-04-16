@@ -1,8 +1,6 @@
 # Jonathan Michaels
 # 5/6/14
 
-import sys
-
 class Statement:
 	def __init__(self, first=''):
 		if first != '':
@@ -346,15 +344,9 @@ def solveTable(statements):
 			print(str(statement + 1) + ': ' + str(statements[statement]))
 	
 
-if len(sys.argv) != 2:
-	# ask for input file if none is provided
-	if len(sys.argv) == 1:
-		sys.argv.append(input("Enter input file: "))
-	else:
-		print('Invalid command line arguments.')
-		sys.exit()
+fileName = input("Enter input file: ")
 
-f = open(sys.argv[1]).readlines()
+f = open(fileName).readlines()
 statements = parseInput(f)
 solveTable(statements)
 
