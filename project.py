@@ -351,7 +351,6 @@ class MyApp(object):
 		self.parent = parent
 		self.main_frame = Frame(self.parent)  ##parent of this frame
 		self.main_frame.pack()  ##make this visible
-		  
 		self.top_frame = Frame(self.main_frame)
 		self.top_frame.pack(side=TOP)
 		
@@ -371,11 +370,32 @@ class MyApp(object):
 		self.button4=Button(self.bottom_frame, text="Finish", command=self.finish)
 		self.button4.pack(side=LEFT)
 		
+		
 		self.is_moving=True
 		self.wait_time=50
+		
+	def enter_file(self,e1):
+		filename = e1.get()
+		print(filename)
+		
 	    
 	def enterFileName(self):
-		pass	
+		file_window = Tk()	
+				
+		l1 = Label(file_window, text="File Name")
+		l1.pack( side = LEFT)		
+		
+		e1 = Entry(file_window, bd =5)
+		e1.pack(side = RIGHT)
+		
+		file_frame = Frame(file_window)
+		file_frame.pack(side = BOTTOM)			
+		
+		button5 = Button(file_frame, text="Enter", command=self.enter_file(e1))
+		button5.pack(side = RIGHT)		
+				
+		file_window.mainloop()	
+		
 	
 	def prevStep(self):
 		pass
