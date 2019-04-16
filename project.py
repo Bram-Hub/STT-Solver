@@ -410,15 +410,15 @@ class MyApp(object):
 		file_frame = Frame(self.file_window)
 		file_frame.pack(side = BOTTOM)			
 		
-		self.button5 = Button(file_frame, text="Enter", command=self.enter_file)
+		self.file_window.bind('<Return>', self.enter_file)
+		self.button5 = Button(file_frame, text="Enter")
+		self.button5.bind('<Button-1>', self.enter_file)
 		self.button5.pack(side = RIGHT)
 		self.file_window.focus_force()
 		self.e1.focus_set()
-			
 
 
-
-	def enter_file(self):
+	def enter_file(self, self2):
 		fileName = self.e1.get()
 		try:
 			self.button5.config(state = NORMAL)
