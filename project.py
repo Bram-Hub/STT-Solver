@@ -440,7 +440,6 @@ class MyApp(object):
 			self.fileName_error.protocol("WM_DELETE_WINDOW", self.callback_fileName_error)
 			l2 = Label(self.fileName_error, text="File does not exist. Close this window and enter a new file to continue")
 			l2.pack()
-			print(self.fileName_error.state())
 			self.fileName_error.lift()
 			self.fileName_error.focus_force()
 			
