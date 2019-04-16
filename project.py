@@ -384,7 +384,7 @@ class MyApp(object):
 		self.fileName_error = ""
 		
 		self.table = []
-		self.current = 0			
+		self.current = -1 #current represents the state just printed out		
 		
 		
 	    
@@ -452,21 +452,20 @@ class MyApp(object):
 		
 
 	def prevStep(self):
-		self.current -= 2
+		self.current -= 1
 		self.text.config(state = NORMAL)
 		self.text.insert(INSERT, self.table[self.current])
 		self.text.config(state = DISABLED)
-		self.current += 1
 	
 	def nextStep(self):
+		self.current += 1
 		self.text.config(state = NORMAL)
 		self.text.insert(INSERT, self.table[self.current])
 		self.text.config(state = DISABLED)
-		self.current += 1
 	
 	def finish(self):
 		self.text.config(state = NORMAL)
-		for i in range(self.current, len(self.table)):
+		for i in range(self.current + 1, len(self.table)):
 			self.text.insert(INSERT, self.table[i])		
 		self.text.config(state = DISABLED)
 	
