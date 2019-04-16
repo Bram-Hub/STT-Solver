@@ -296,6 +296,8 @@ def isComplete(statements):
 
 
 def solveTable(statements):
+	result = []
+	
 	global changedLiterals
 	changedLiterals = dict()
 
@@ -303,17 +305,17 @@ def solveTable(statements):
 		statement.assignment = True
 	statements[-1].assignment = False
 
-	print('Original Statements:')
+	result.append('Original Statements:\n')
 	for statement in range(len(statements)):
-		print(str(statement + 1) + ': ' + str(statements[statement]))
+		result[0] += str(statement + 1) + ': ' + str(statements[statement]) + "\n"
 
 	count = 0
 	while True:
 		# look for contradiction
 		for statement in range(len(statements)):
 			if not statements[statement].isValid():
-				print('\nContradiction found in Statement ' + str(statement + 1) + '! Therefore, this is valid.')
-				return
+				result.append('\nContradiction found in Statement ' + str(statement + 1) + '! Therefore, this is valid.\n')
+				return result
 
 		# see if any literal's truth value needs to be propogated to all statements
 		if len(changedLiterals) > 0:
@@ -334,16 +336,16 @@ def solveTable(statements):
 			# no assignment was forced. check if the statements are complete
 			else:
 				if isComplete(statements):
-					print('\nNo contradiction found! Therefore, this is invalid.')
+					result.append('\nNo contradiction found! Therefore, this is invalid.\n')
 				else:
-					print('\nNo forced move')
-				return
+					result.append('\nNo forced move\n')
+				return result
 
-		input()
+		#input()
 		count += 1
-		print('\nStep ' + str(count) + ' - ' + toPrint)
+		result.append('\nStep ' + str(count) + ' - ' + toPrint + "\n")
 		for statement in range(len(statements)):
-			print(str(statement + 1) + ': ' + str(statements[statement]))	
+			result[-1] += str(statement + 1) + ': ' + str(statements[statement]) + "\n"	
 
 
 class MyApp(object):
@@ -371,8 +373,9 @@ class MyApp(object):
 		self.button4.pack(side=LEFT)
 		
 		
-		self.is_moving=True
-		self.wait_time=50
+
+		self.table = []
+		self.current = 0		
 		
 	def enter_file(self,e1):
 		filename = e1.get()
@@ -394,17 +397,21 @@ class MyApp(object):
 		button5 = Button(file_frame, text="Enter", command=self.enter_file(e1))
 		button5.pack(side = RIGHT)		
 				
-		file_window.mainloop()	
-		
+		file_window.mainloop()
 	
+
 	def prevStep(self):
-		pass
+		self.current -= 2
+		print(self.table[self.current])
+		self.current += 1
 	
 	def nextStep(self):
-		pass
+		print(self.table[self.current])
+		self.current += 1
 	
 	def finish(self):
-		pass
+		for i in range(self.current, len(self.table)):
+			print(self.table[i])
 	
 	
 	
@@ -414,9 +421,11 @@ if __name__ == "__main__":
 	myapp=MyApp(root)
 	root.mainloop()	
 	
-	fileName = input("Enter input file: ")
+	#fileName = "inputs/3premises.txt"
+
+	#f = open(fileName).readlines()
+	#statements = parseInput(f)
+	#r = solveTable(statements)
 	
-	f = open(fileName).readlines()
-	statements = parseInput(f)
-	solveTable(statements)
-	
+	#for i in r:
+		#print(i)

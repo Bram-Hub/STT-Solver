@@ -5,14 +5,16 @@ def enter_file():
 
 file_window = Tk()
 
-main_frame = Frame(file_window)
-main_frame.pack()
+file_frame = Frame(file_window)
+file_frame.pack(side = BOTTOM)
+
+
 
 l1 = Label(file_window, text="File Name")
 l1.pack( side = LEFT)
 e1 = Entry(file_window, bd =5)
 e1.pack(side = RIGHT)
-button = Button(main_frame, text="Enter", command=enter_file)
+button = Button(file_frame, text="Enter", command=enter_file)
 button.pack()
 
 file_window.mainloop()
