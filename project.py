@@ -412,7 +412,8 @@ class MyApp(object):
 		
 		self.button5 = Button(file_frame, text="Enter", command=self.enter_file)
 		self.button5.pack(side = RIGHT)
-
+		self.file_window.focus_force()
+		self.e1.focus_set()
 			
 
 
@@ -464,6 +465,8 @@ class MyApp(object):
 		self.current -= 2
 		self.nextStep();
 		self.button3.config(state = NORMAL)
+		if self.current == 0:
+			self.button2.config(state = DISABLED)
 		
 	
 	def nextStep(self):
@@ -474,12 +477,19 @@ class MyApp(object):
 		self.text.config(state = DISABLED)
 		self.button2.config(state = NORMAL)
 		
+		if self.current == 0:
+			self.button2.config(state = DISABLED)
+		if self.current == len(self.table)-1:
+			self.button3.config(state = DISABLED)
+		else:
+			self.button3.config(state = NORMAL)		
+		
 	def lastStep(self):
 		self.current = len(self.table) - 2
 		self.nextStep();		
-		
 	
 	def showAllSteps(self):
+		self.current = len(self.table) - 1
 		self.text.config(state = NORMAL)
 		self.text.delete(1.0,END)
 		for i in range(len(self.table)):
