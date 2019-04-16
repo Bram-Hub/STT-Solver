@@ -360,17 +360,22 @@ class MyApp(object):
 		self.bottom_frame = Frame(self.main_frame)
 		self.bottom_frame.pack(side=BOTTOM)
 		
-		self.canvas = Canvas(self.top_frame, height=600, width=600)
-		self.canvas.pack()
+		self.scrollbar = Scrollbar(self.parent)
+		self.scrollbar.pack( side = RIGHT, fill = Y )	
 		
-		self.button1 = Button(self.bottom_frame, text="Enter File Name", command=self.enterFileName)
+		self.text = Text(self.parent, yscrollcommand = self.scrollbar.set, state = DISABLED)
+		self.text.pack()
+		
+		self.scrollbar.config( command = self.text.yview )		
+		
+		self.button1 = Button(self.top_frame, text="Enter File Name", command=self.enterFileName)
 		self.button1.pack(side=LEFT)
-		self.button2 = Button(self.bottom_frame, text="Prev Step", command=self.prevStep)
+		self.button2 = Button(self.top_frame, text="Prev Step", command=self.prevStep)
 		self.button2.pack(side=LEFT)
-		self.button3=Button(self.bottom_frame, text="Next Step", command=self.nextStep)
+		self.button3=Button(self.top_frame, text="Next Step", command=self.nextStep)
 		self.button3.pack(side=LEFT)
 		
-		self.button4=Button(self.bottom_frame, text="Finish", command=self.finish)
+		self.button4=Button(self.top_frame, text="Finish", command=self.finish)
 		self.button4.pack(side=LEFT)
 		
 		self.e1 = ""
@@ -379,9 +384,7 @@ class MyApp(object):
 		self.fileName_error = ""
 		
 		self.table = []
-		self.current = 0		
-		#self.parent.mainloop()
-	
+		self.current = 0			
 		
 		
 	    
@@ -404,10 +407,12 @@ class MyApp(object):
 		file_frame.pack(side = BOTTOM)			
 		
 		self.button5 = Button(file_frame, text="Enter", command=self.enter_file)
-		self.button5.pack(side = RIGHT)		
-				
-	
-	
+		self.button5.pack(side = RIGHT)
+
+			
+
+
+
 	def enter_file(self):
 		fileName = self.e1.get()
 		try:
@@ -448,30 +453,25 @@ class MyApp(object):
 
 	def prevStep(self):
 		self.current -= 2
-		print(self.table[self.current])
+		self.text.config(state = NORMAL)
+		self.text.insert(INSERT, self.table[self.current])
+		self.text.config(state = DISABLED)
 		self.current += 1
 	
 	def nextStep(self):
-		print(self.table[self.current])
+		self.text.config(state = NORMAL)
+		self.text.insert(INSERT, self.table[self.current])
+		self.text.config(state = DISABLED)
 		self.current += 1
 	
 	def finish(self):
+		self.text.config(state = NORMAL)
 		for i in range(self.current, len(self.table)):
-			print(self.table[i])
+			self.text.insert(INSERT, self.table[i])		
+		self.text.config(state = DISABLED)
 	
-	
-	
+
 if __name__ == "__main__":
-	
 	root = Tk()
 	myapp=MyApp(root)
 	root.mainloop()	
-	
-	#fileName = "inputs/3premises.txt"
-
-	#f = open(fileName).readlines()
-	#statements = parseInput(f)
-	#r = solveTable(statements)
-	
-	#for i in r:
-		#print(i)
