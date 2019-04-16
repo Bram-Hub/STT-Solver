@@ -2,6 +2,7 @@
 # 5/6/14
 
 from tkinter import *
+import time
 
 class Statement:
 	def __init__(self, first=''):
@@ -371,7 +372,12 @@ class MyApp(object):
 		
 		self.button4=Button(self.bottom_frame, text="Finish", command=self.finish)
 		self.button4.pack(side=LEFT)
+		
 		self.e1 = ""
+		self.file_window = ""
+		self.button5 = ""
+		self.fileName_error = ""
+		
 		self.table = []
 		self.current = 0		
 		#self.parent.mainloop()
@@ -380,33 +386,65 @@ class MyApp(object):
 		
 	    
 	def enterFileName(self):
-		file_window = Toplevel(self.parent)
+		self.file_window = Toplevel(self.parent)
+		self.file_window.protocol("WM_DELETE_WINDOW", self.callback_file_window)
+		
+		self.button1.config(state = DISABLED)
+		self.button2.config(state = DISABLED)
+		self.button3.config(state = DISABLED)
+		self.button4.config(state = DISABLED)		
 				
-		l1 = Label(file_window, text="File Name")
+		l1 = Label(self.file_window, text="File Name")
 		l1.pack( side = LEFT)		
 		
-		self.e1 = Entry(file_window, bd =5)
-		self.e1.pack(side = RIGHT)
+		self.e1 = Entry(self.file_window, bd =5)
+		self.e1.pack(side = LEFT)
 		
-		file_frame = Frame(file_window)
+		file_frame = Frame(self.file_window)
 		file_frame.pack(side = BOTTOM)			
 		
-		button5 = Button(file_frame, text="Enter", command=self.enter_file)
-		button5.pack(side = RIGHT)		
+		self.button5 = Button(file_frame, text="Enter", command=self.enter_file)
+		self.button5.pack(side = RIGHT)		
 				
-		#file_window.mainloop()
 	
 	
 	def enter_file(self):
 		fileName = self.e1.get()
 		try:
+			self.button5.config(state = NORMAL)
 			f = open(fileName).readlines()
+			statements = parseInput(f)
+			self.table = solveTable(statements)	
+			self.button1.config(state = NORMAL)
+			self.button2.config(state = NORMAL)
+			self.button3.config(state = NORMAL)
+			self.button4.config(state = NORMAL)			
+			self.file_window.destroy()
+
 		except:
-			print("nah bruh")
+			self.fileName_error = Toplevel(self.parent)
+			self.fileName_error.protocol("WM_DELETE_WINDOW", self.callback_fileName_error)
+			l2 = Label(self.fileName_error, text="File does not exist. Close this window and enter a new file to continue")
+			l2.pack()
+			print(self.fileName_error.state())
+			self.fileName_error.lift()
+			self.fileName_error.focus_force()
 			
-		statements = parseInput(f)
-		self.table = solveTable(statements)		
-	
+			self.button5.config(state = DISABLED)
+					
+			
+		
+	def callback_fileName_error(self):
+		self.button5.config(state = NORMAL)
+		self.fileName_error.destroy()
+		
+	def callback_file_window(self):
+		self.button1.config(state = NORMAL)
+		self.button2.config(state = NORMAL)
+		self.button3.config(state = NORMAL)
+		self.button4.config(state = NORMAL)
+		self.file_window.destroy()
+		
 
 	def prevStep(self):
 		self.current -= 2
