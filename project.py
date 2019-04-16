@@ -411,15 +411,15 @@ class MyApp(object):
 
 	def prevStep(self):
 		self.current -= 2
-		self.text.config(state = DISABLED)
-		self.text.insert(INSERT, self.table[self.current])
 		self.text.config(state = NORMAL)
+		self.text.insert(INSERT, self.table[self.current])
+		self.text.config(state = DISABLED)
 		self.current += 1
 	
 	def nextStep(self):
-		self.text.config(state = DISABLED)
-		self.text.insert(INSERT, self.table[self.current])
 		self.text.config(state = NORMAL)
+		self.text.insert(INSERT, self.table[self.current])
+		self.text.config(state = DISABLED)
 		self.current += 1
 	
 	def finish(self):
