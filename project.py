@@ -373,8 +373,6 @@ class MyApp(object):
 		self.button4=Button(self.bottom_frame, text="Finish", command=self.finish)
 		self.button4.pack(side=LEFT)
 		
-		self.is_moving=True
-		self.wait_time=50
 		
 		self.table = []
 		self.current = 0
