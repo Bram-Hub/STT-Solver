@@ -1,6 +1,8 @@
 # Jonathan Michaels
 # 5/6/14
 
+from tkinter import *
+
 class Statement:
 	def __init__(self, first=''):
 		if first != '':
@@ -341,16 +343,13 @@ def solveTable(statements):
 		count += 1
 		print('\nStep ' + str(count) + ' - ' + toPrint)
 		for statement in range(len(statements)):
-			print(str(statement + 1) + ': ' + str(statements[statement]))
+			print(str(statement + 1) + ': ' + str(statements[statement]))	
+
+
+if __name__ == "__main__":
+	fileName = input("Enter input file: ")
 	
-
-fileName = input("Enter input file: ")
-
-f = open(fileName).readlines()
-statements = parseInput(f)
-solveTable(statements)
-
-
-
-
-
+	f = open(fileName).readlines()
+	statements = parseInput(f)
+	solveTable(statements)
+	
