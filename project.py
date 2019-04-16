@@ -375,7 +375,7 @@ class MyApp(object):
 		self.button3=Button(self.top_frame, text="Next Step", command=self.nextStep)
 		self.button3.pack(side=LEFT)
 		
-		self.button4=Button(self.top_frame, text="Finish", command=self.finish)
+		self.button4=Button(self.top_frame, text="Show All Steps", command=self.showAllSteps)
 		self.button4.pack(side=LEFT)
 		
 		self.e1 = ""
@@ -454,7 +454,8 @@ class MyApp(object):
 	def prevStep(self):
 		self.current -= 1
 		self.text.config(state = NORMAL)
-		self.text.insert(INSERT, self.table[self.current])
+		self.text.delete(1.0,END)
+		self.text.insert(END, self.table[self.current])
 		self.text.config(state = DISABLED)
 		self.button3.config(state = NORMAL)
 		
@@ -462,14 +463,16 @@ class MyApp(object):
 	def nextStep(self):
 		self.current += 1
 		self.text.config(state = NORMAL)
-		self.text.insert(INSERT, self.table[self.current])
+		self.text.delete(1.0,END)
+		self.text.insert(END, self.table[self.current])
 		self.text.config(state = DISABLED)
 		self.button2.config(state = NORMAL)
 	
-	def finish(self):
+	def showAllSteps(self):
 		self.text.config(state = NORMAL)
-		for i in range(self.current + 1, len(self.table)):
-			self.text.insert(INSERT, self.table[i])		
+		self.text.delete(1.0,END)
+		for i in range(len(self.table)):
+			self.text.insert(END, self.table[i])		
 		self.text.config(state = DISABLED)
 		self.button3.config(state = DISABLED)
 		self.button2.config(state = NORMAL)
