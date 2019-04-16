@@ -421,7 +421,7 @@ class MyApp(object):
 			statements = parseInput(f)
 			self.table = solveTable(statements)	
 			self.button1.config(state = NORMAL)
-			self.button2.config(state = NORMAL)
+			#self.button2.config(state = NORMAL)
 			self.button3.config(state = NORMAL)
 			self.button4.config(state = NORMAL)			
 			self.file_window.destroy()
@@ -445,7 +445,7 @@ class MyApp(object):
 		
 	def callback_file_window(self):
 		self.button1.config(state = NORMAL)
-		self.button2.config(state = NORMAL)
+		#self.button2.config(state = NORMAL)
 		self.button3.config(state = NORMAL)
 		self.button4.config(state = NORMAL)
 		self.file_window.destroy()
@@ -456,18 +456,23 @@ class MyApp(object):
 		self.text.config(state = NORMAL)
 		self.text.insert(INSERT, self.table[self.current])
 		self.text.config(state = DISABLED)
+		self.button3.config(state = NORMAL)
+		
 	
 	def nextStep(self):
 		self.current += 1
 		self.text.config(state = NORMAL)
 		self.text.insert(INSERT, self.table[self.current])
 		self.text.config(state = DISABLED)
+		self.button2.config(state = NORMAL)
 	
 	def finish(self):
 		self.text.config(state = NORMAL)
 		for i in range(self.current + 1, len(self.table)):
 			self.text.insert(INSERT, self.table[i])		
 		self.text.config(state = DISABLED)
+		self.button3.config(state = DISABLED)
+		self.button2.config(state = NORMAL)
 	
 
 if __name__ == "__main__":
