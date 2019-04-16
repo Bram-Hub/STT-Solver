@@ -315,7 +315,7 @@ def solveTable(statements):
 		# look for contradiction
 		for statement in range(len(statements)):
 			if not statements[statement].isValid():
-				result.append('\nContradiction found in Statement ' + str(statement + 1) + '! Therefore, this is valid.\n')
+				result[-1] += '\nContradiction found in Statement ' + str(statement + 1) + '! Therefore, this is valid.\n'
 				return result
 
 		# see if any literal's truth value needs to be propogated to all statements
@@ -337,14 +337,14 @@ def solveTable(statements):
 			# no assignment was forced. check if the statements are complete
 			else:
 				if isComplete(statements):
-					result.append('\nNo contradiction found! Therefore, this is invalid.\n')
+					result[-1] += '\nNo contradiction found! Therefore, this is invalid.\n'
 				else:
-					result.append('\nNo forced move\n')
+					result[-1] += '\nNo forced move\n'
 				return result
 
 		#input()
 		count += 1
-		result.append('\nStep ' + str(count) + ' - ' + toPrint + "\n")
+		result.append('Step ' + str(count) + ' - ' + toPrint + "\n")
 		for statement in range(len(statements)):
 			result[-1] += str(statement + 1) + ': ' + str(statements[statement]) + "\n"	
 
@@ -375,6 +375,9 @@ class MyApp(object):
 		self.button3=Button(self.top_frame, text="Next Step", command=self.nextStep)
 		self.button3.pack(side=LEFT)
 		
+		self.button6 = Button(self.top_frame, text = "Last Step", command = self.lastStep)
+		self.button6.pack(side = LEFT)
+		
 		self.button4=Button(self.top_frame, text="Show All Steps", command=self.showAllSteps)
 		self.button4.pack(side=LEFT)
 		
@@ -395,7 +398,8 @@ class MyApp(object):
 		self.button1.config(state = DISABLED)
 		self.button2.config(state = DISABLED)
 		self.button3.config(state = DISABLED)
-		self.button4.config(state = DISABLED)		
+		self.button4.config(state = DISABLED)
+		self.button6.config(state = DISABLED)
 				
 		l1 = Label(self.file_window, text="File Name")
 		l1.pack( side = LEFT)		
@@ -423,8 +427,12 @@ class MyApp(object):
 			self.button1.config(state = NORMAL)
 			#self.button2.config(state = NORMAL)
 			self.button3.config(state = NORMAL)
-			self.button4.config(state = NORMAL)			
+			self.button4.config(state = NORMAL)
+			self.button6.config(state = NORMAL)
+			
 			self.file_window.destroy()
+			
+			self.nextStep();
 
 		except:
 			self.fileName_error = Toplevel(self.parent)
@@ -448,15 +456,13 @@ class MyApp(object):
 		#self.button2.config(state = NORMAL)
 		self.button3.config(state = NORMAL)
 		self.button4.config(state = NORMAL)
+		self.button6.config(state = NORMAL)
 		self.file_window.destroy()
 		
 
 	def prevStep(self):
-		self.current -= 1
-		self.text.config(state = NORMAL)
-		self.text.delete(1.0,END)
-		self.text.insert(END, self.table[self.current])
-		self.text.config(state = DISABLED)
+		self.current -= 2
+		self.nextStep();
 		self.button3.config(state = NORMAL)
 		
 	
@@ -467,6 +473,11 @@ class MyApp(object):
 		self.text.insert(END, self.table[self.current])
 		self.text.config(state = DISABLED)
 		self.button2.config(state = NORMAL)
+		
+	def lastStep(self):
+		self.current = len(self.table) - 2
+		self.nextStep();		
+		
 	
 	def showAllSteps(self):
 		self.text.config(state = NORMAL)
