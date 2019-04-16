@@ -1,6 +1,7 @@
 from tkinter import * 
 
 def enter_file():
+    print("hello")
     filename = e1.get()
 
 file_window = Tk()

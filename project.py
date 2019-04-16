@@ -371,33 +371,41 @@ class MyApp(object):
 		
 		self.button4=Button(self.bottom_frame, text="Finish", command=self.finish)
 		self.button4.pack(side=LEFT)
-		
-		
-
+		self.e1 = ""
 		self.table = []
 		self.current = 0		
+		#self.parent.mainloop()
+	
 		
-	def enter_file(self,e1):
-		filename = e1.get()
-		print(filename)
 		
 	    
 	def enterFileName(self):
-		file_window = Tk()	
+		file_window = Toplevel(self.parent)
 				
 		l1 = Label(file_window, text="File Name")
 		l1.pack( side = LEFT)		
 		
-		e1 = Entry(file_window, bd =5)
-		e1.pack(side = RIGHT)
+		self.e1 = Entry(file_window, bd =5)
+		self.e1.pack(side = RIGHT)
 		
 		file_frame = Frame(file_window)
 		file_frame.pack(side = BOTTOM)			
 		
-		button5 = Button(file_frame, text="Enter", command=self.enter_file(e1))
+		button5 = Button(file_frame, text="Enter", command=self.enter_file)
 		button5.pack(side = RIGHT)		
 				
-		file_window.mainloop()
+		#file_window.mainloop()
+	
+	
+	def enter_file(self):
+		fileName = self.e1.get()
+		try:
+			f = open(fileName).readlines()
+		except:
+			print("nah bruh")
+			
+		statements = parseInput(f)
+		self.table = solveTable(statements)		
 	
 
 	def prevStep(self):
