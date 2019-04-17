@@ -350,9 +350,8 @@ def solveTable(statements):
 
 class GUI(object):
 	def __init__(self, parent):
-		#problemo: if you are in the middle of stepping through a solution and you click enter new file and import the same file it won't start at the beginning
-		#same thing happens if they are 2 different files
 		self.parent = parent
+		self.parent.title("STT-Solver")
 		self.main_frame = Frame(self.parent)  ##parent of this frame
 		self.main_frame.pack()  ##make this visible
 		self.top_frame = Frame(self.main_frame)
@@ -389,6 +388,7 @@ class GUI(object):
 		self.file_window = ""
 		self.button5 = ""
 		self.fileName_error = ""
+		self.fileName_entered = False
 		
 		self.table = []
 		self.current = -1 #current represents the state just printed out		
@@ -397,6 +397,7 @@ class GUI(object):
 	    
 	def enterFileName(self):
 		self.file_window = Toplevel(self.parent)
+		self.file_window.title("Enter file name")
 		self.file_window.protocol("WM_DELETE_WINDOW", self.callback_file_window)
 		
 		self.button1.config(state = DISABLED)
@@ -434,6 +435,7 @@ class GUI(object):
 			self.button4.config(state = NORMAL)
 			self.button6.config(state = NORMAL)
 			self.current = -1
+			self.fileName_entered = True
 			
 			self.file_window.destroy()
 			
@@ -441,6 +443,7 @@ class GUI(object):
 
 		except:
 			self.fileName_error = Toplevel(self.parent)
+			self.fileName_error.title("File not found")
 			self.fileName_error.protocol("WM_DELETE_WINDOW", self.callback_fileName_error)
 			l2 = Label(self.fileName_error, text="File does not exist. Close this window and enter a new file to continue")
 			l2.pack()
@@ -464,12 +467,15 @@ class GUI(object):
 		
 	def callback_file_window(self):
 		self.button1.config(state = NORMAL)
-		#self.button2.config(state = NORMAL)
-		self.button3.config(state = NORMAL)
-		self.button4.config(state = NORMAL)
-		self.button6.config(state = NORMAL)
-		self.fileName_error.destroy()
-		self.file_window.destroy()
+		if self.fileName_entered == True:
+			self.button3.config(state = NORMAL)
+			self.button4.config(state = NORMAL)
+			self.button6.config(state = NORMAL)
+		try:
+			self.fileName_error.destroy()
+			self.file_window.destroy()
+		except:
+			self.file_window.destroy()
 		
 
 	def prevStep(self):
