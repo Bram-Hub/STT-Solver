@@ -351,6 +351,8 @@ def solveTable(statements):
 
 class MyApp(object):
 	def __init__(self, parent):
+		#problemo: if you are in the middle of stepping through a solution and you click enter new file and import the same file it won't start at the beginning
+		#same thing happens if they are 2 different files
 		self.parent = parent
 		self.main_frame = Frame(self.parent)  ##parent of this frame
 		self.main_frame.pack()  ##make this visible
@@ -410,8 +412,8 @@ class MyApp(object):
 		file_frame = Frame(self.file_window)
 		file_frame.pack(side = BOTTOM)			
 		
-		self.file_window.bind('<Return>', self.enter_file)
 		self.button5 = Button(file_frame, text="Enter")
+		self.file_window.bind('<Return>', self.enter_file)
 		self.button5.bind('<Button-1>', self.enter_file)
 		self.button5.pack(side = RIGHT)
 		self.file_window.focus_force()
@@ -421,7 +423,6 @@ class MyApp(object):
 	def enter_file(self, self2):
 		fileName = self.e1.get()
 		try:
-			self.button5.config(state = NORMAL)
 			f = open(fileName).readlines()
 			statements = parseInput(f)
 			self.table = solveTable(statements)	
@@ -444,11 +445,15 @@ class MyApp(object):
 			self.fileName_error.focus_force()
 			
 			self.button5.config(state = DISABLED)
+			self.file_window.unbind('<Return>')
+			self.button5.unbind('<Button-1>')			
 					
 			
 		
 	def callback_fileName_error(self):
 		self.button5.config(state = NORMAL)
+		self.file_window.bind('<Return>', self.enter_file)
+		self.button5.bind('<Button-1>', self.enter_file)		
 		self.fileName_error.destroy()
 		
 	def callback_file_window(self):
@@ -457,6 +462,7 @@ class MyApp(object):
 		self.button3.config(state = NORMAL)
 		self.button4.config(state = NORMAL)
 		self.button6.config(state = NORMAL)
+		self.fileName_error.destroy()
 		self.file_window.destroy()
 		
 
