@@ -2,7 +2,6 @@
 # 5/6/14
 
 from tkinter import *
-import time
 
 class Statement:
 	def __init__(self, first=''):
@@ -349,7 +348,7 @@ def solveTable(statements):
 			result[-1] += str(statement + 1) + ': ' + str(statements[statement]) + "\n"	
 
 
-class MyApp(object):
+class GUI(object):
 	def __init__(self, parent):
 		#problemo: if you are in the middle of stepping through a solution and you click enter new file and import the same file it won't start at the beginning
 		#same thing happens if they are 2 different files
@@ -506,5 +505,5 @@ class MyApp(object):
 
 if __name__ == "__main__":
 	root = Tk()
-	myapp=MyApp(root)
+	gui = GUI(root)
 	root.mainloop()	
