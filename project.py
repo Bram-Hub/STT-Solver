@@ -375,12 +375,15 @@ class GUI(object):
 		self.button2.pack(side=LEFT)
 		self.button3=Button(self.top_frame, text="Next Step", command=self.nextStep)
 		self.button3.pack(side=LEFT)
-		
+		self.button4=Button(self.top_frame, text="Show All Steps", command=self.showAllSteps)
+		self.button4.pack(side=LEFT)		
 		self.button6 = Button(self.top_frame, text = "Last Step", command = self.lastStep)
 		self.button6.pack(side = LEFT)
 		
-		self.button4=Button(self.top_frame, text="Show All Steps", command=self.showAllSteps)
-		self.button4.pack(side=LEFT)
+		self.button2.config(state = DISABLED)
+		self.button3.config(state = DISABLED)
+		self.button4.config(state = DISABLED)
+		self.button6.config(state = DISABLED)
 		
 		self.e1 = ""
 		self.file_window = ""
@@ -430,6 +433,7 @@ class GUI(object):
 			self.button3.config(state = NORMAL)
 			self.button4.config(state = NORMAL)
 			self.button6.config(state = NORMAL)
+			self.current = -1
 			
 			self.file_window.destroy()
 			
@@ -445,12 +449,15 @@ class GUI(object):
 			
 			self.button5.config(state = DISABLED)
 			self.file_window.unbind('<Return>')
-			self.button5.unbind('<Button-1>')			
+			self.button5.unbind('<Button-1>')
+			
+			self.e1.config(state = DISABLED)
 					
 			
 		
 	def callback_fileName_error(self):
 		self.button5.config(state = NORMAL)
+		self.e1.config(state = NORMAL)
 		self.file_window.bind('<Return>', self.enter_file)
 		self.button5.bind('<Button-1>', self.enter_file)		
 		self.fileName_error.destroy()
