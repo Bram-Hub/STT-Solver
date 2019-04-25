@@ -368,7 +368,9 @@ class GUI(object):
 		
 		self.scrollbar.config( command = self.text.yview )		
 		
-		self.button1 = Button(self.top_frame, text="Enter File Name", command=self.enterFileName)
+		self.button7 = Button(self.top_frame, text="New", command=self.newFile)
+		self.button7.pack(side=LEFT)
+		self.button1 = Button(self.top_frame, text="Open", command=self.enterFileName)
 		self.button1.pack(side=LEFT)
 		self.button2 = Button(self.top_frame, text="Prev Step", command=self.prevStep)
 		self.button2.pack(side=LEFT)
@@ -393,6 +395,22 @@ class GUI(object):
 		self.table = []
 		self.current = -1 #current represents the state just printed out		
 		
+	#broken
+	def newFile(self):
+		self.file_window2 = Toplevel(self.parent)
+		self.file_window2.title("New")
+		self.file_window2.protocol("WM_DELETE_WINDOW", self.callback_file_window)
+		
+		self.button1.config(state = DISABLED)
+		self.button2.config(state = DISABLED)
+		self.button3.config(state = DISABLED)
+		self.button4.config(state = DISABLED)
+		self.button6.config(state = DISABLED)
+		self.button7.config(state = DISABLED)
+				
+		
+		self.text2 = Text(self.file_window2)
+		self.text2.pack()
 		
 	    
 	def enterFileName(self):
@@ -405,6 +423,7 @@ class GUI(object):
 		self.button3.config(state = DISABLED)
 		self.button4.config(state = DISABLED)
 		self.button6.config(state = DISABLED)
+		self.button7.config(state = DISABLED)
 				
 		l1 = Label(self.file_window, text="File Name")
 		l1.pack( side = LEFT)		
@@ -425,6 +444,7 @@ class GUI(object):
 
 	def enter_file(self, self2):
 		fileName = self.e1.get()
+		self.button7.config(state = NORMAL)		
 		try:
 			f = open(fileName).readlines()
 			statements = parseInput(f)
@@ -434,6 +454,7 @@ class GUI(object):
 			self.button3.config(state = NORMAL)
 			self.button4.config(state = NORMAL)
 			self.button6.config(state = NORMAL)
+
 			self.current = -1
 			self.fileName_entered = True
 			
@@ -467,10 +488,11 @@ class GUI(object):
 		
 	def callback_file_window(self):
 		self.button1.config(state = NORMAL)
+		self.button7.config(state = NORMAL)
 		if self.fileName_entered == True:
 			self.button3.config(state = NORMAL)
 			self.button4.config(state = NORMAL)
-			self.button6.config(state = NORMAL)
+			self.button6.config(state = NORMAL)			
 		try:
 			self.fileName_error.destroy()
 			self.file_window.destroy()
