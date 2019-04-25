@@ -461,24 +461,30 @@ class GUI(object):
 			f = open(fileName).readlines()
 			try:
 				statements = parseInput(f)
+				self.table = solveTable(statements)	
+				self.button1.config(state = NORMAL)
+				#self.button2.config(state = NORMAL)
+				self.button3.config(state = NORMAL)
+				self.button4.config(state = NORMAL)
+				self.button6.config(state = NORMAL)
+		
+				self.current = -1
+				#self.fileName_entered = True
+				
+				#self.file_window.destroy()
+				
+				self.nextStep()				
 			except Exception as e:
 				self.text.config(state = NORMAL)
 				self.text.delete(1.0,END)
 				self.text.insert(END, str(e))
-				self.text.config(state = DISABLED)				
-			self.table = solveTable(statements)	
-			self.button1.config(state = NORMAL)
-			#self.button2.config(state = NORMAL)
-			self.button3.config(state = NORMAL)
-			self.button4.config(state = NORMAL)
-			self.button6.config(state = NORMAL)
-	
-			self.current = -1
-			#self.fileName_entered = True
-			
-			#self.file_window.destroy()
-			
-			self.nextStep()
+				self.text.config(state = DISABLED)
+				
+				self.button2.config(state = DISABLED)
+				self.button3.config(state = DISABLED)
+				self.button4.config(state = DISABLED)
+				self.button6.config(state = DISABLED)				
+
 		except:
 			pass
 		"""
