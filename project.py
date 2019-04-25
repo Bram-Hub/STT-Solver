@@ -2,6 +2,8 @@
 # 5/6/14
 
 from tkinter import *
+from tkinter import filedialog
+import os
 
 class Statement:
 	def __init__(self, first=''):
@@ -240,8 +242,9 @@ def getStatement(line, i):
 				s.second.operation = line[i]
 				s.second.first = Statement(line[i+1])
 			else:
-				print('Invalid input file.')
-				sys.exit()
+				#print('Invalid input file.')
+				#sys.exit()
+				raise Exception("Invalid input file.")
 			i += 1
 		elif line[i] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
 			if s.operation == '' and s.first == '':
@@ -249,11 +252,13 @@ def getStatement(line, i):
 			elif s.second == '':
 				s.second = Statement(line[i])
 			else:
-				print('Invalid input file.')
-				sys.exit()
+				#print('Invalid input file.')
+				#sys.exit()
+				raise Exception("Invalid input file.")
 		else:
-			print('Invalid input file.')
-			sys.exit()
+			#print('Invalid input file.')
+			#sys.exit()
+			raise Exception("Invalid input file.")
 
 		i += 1
 	if s.second == '':
@@ -352,8 +357,8 @@ class GUI(object):
 	def __init__(self, parent):
 		self.parent = parent
 		self.parent.title("STT-Solver")
-		self.main_frame = Frame(self.parent)  ##parent of this frame
-		self.main_frame.pack()  ##make this visible
+		self.main_frame = Frame(self.parent)
+		self.main_frame.pack() 
 		self.top_frame = Frame(self.main_frame)
 		self.top_frame.pack(side=TOP)
 		
@@ -412,8 +417,13 @@ class GUI(object):
 		self.text2 = Text(self.file_window2)
 		self.text2.pack()
 		
-	    
 	def enterFileName(self):
+		start = os.getcwd() + "\\inputs"
+		self.parent.filename =  filedialog.askopenfilename(initialdir = start,title = "Select file",filetypes = (("txt files","*.txt"),("All files","*.*")))
+		self.enter_file(None)
+		
+	    
+	def enterFileNameAlt(self):
 		self.file_window = Toplevel(self.parent)
 		self.file_window.title("Enter file name")
 		self.file_window.protocol("WM_DELETE_WINDOW", self.callback_file_window)
@@ -443,25 +453,35 @@ class GUI(object):
 
 
 	def enter_file(self, self2):
-		fileName = self.e1.get()
-		self.button7.config(state = NORMAL)		
 		try:
+			#fileName = self.e1.get()
+			fileName = self.parent.filename
+			self.button7.config(state = NORMAL)		
+			#try:
 			f = open(fileName).readlines()
-			statements = parseInput(f)
+			try:
+				statements = parseInput(f)
+			except Exception as e:
+				self.text.config(state = NORMAL)
+				self.text.delete(1.0,END)
+				self.text.insert(END, str(e))
+				self.text.config(state = DISABLED)				
 			self.table = solveTable(statements)	
 			self.button1.config(state = NORMAL)
 			#self.button2.config(state = NORMAL)
 			self.button3.config(state = NORMAL)
 			self.button4.config(state = NORMAL)
 			self.button6.config(state = NORMAL)
-
+	
 			self.current = -1
-			self.fileName_entered = True
+			#self.fileName_entered = True
 			
-			self.file_window.destroy()
+			#self.file_window.destroy()
 			
-			self.nextStep();
-
+			self.nextStep()
+		except:
+			pass
+		"""
 		except:
 			self.fileName_error = Toplevel(self.parent)
 			self.fileName_error.title("File not found")
@@ -476,7 +496,7 @@ class GUI(object):
 			self.button5.unbind('<Button-1>')
 			
 			self.e1.config(state = DISABLED)
-					
+		"""
 			
 		
 	def callback_fileName_error(self):
