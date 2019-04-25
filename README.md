@@ -2,12 +2,13 @@
 ## Authors
 2014:
 Johnathan Michaels
+2019:
+Salil Chandra
+Escher Campanella
 
 ## About
 To Run:
-- Command Line: python3 project.py inputfile.txt
-- IDLE: Run the program. Upon running, you will be prompted to enter the input file.
-- Hit enter to get the next step
+Double click on STT-Solver.bat. Click open and enter the input file. Click enter to start solving problem.
 
 Format of input file:
 - n lines
