@@ -483,9 +483,9 @@ class GUI(object):
 				self.button2.config(state = DISABLED)
 				self.button3.config(state = DISABLED)
 				self.button4.config(state = DISABLED)
-				self.button6.config(state = DISABLED)				
-
-		except:
+				self.button6.config(state = DISABLED)
+				
+		except:	#cancel
 			pass
 		"""
 		except:
