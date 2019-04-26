@@ -402,9 +402,9 @@ class GUI(object):
 		
 	#broken
 	def newFile(self):
-		self.file_window2 = Toplevel(self.parent)
-		self.file_window2.title("New")
-		self.file_window2.protocol("WM_DELETE_WINDOW", self.callback_file_window)
+		self.file_window = Toplevel(self.parent)
+		self.file_window.title("New")
+		self.file_window.protocol("WM_DELETE_WINDOW", self.callback_file_window)
 		
 		self.button1.config(state = DISABLED)
 		self.button2.config(state = DISABLED)
