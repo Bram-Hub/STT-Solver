@@ -426,6 +426,7 @@ class GUI(object):
 		self.button5.bind('<Button-1>', self.inputHelper)
 		self.button5.pack(side = RIGHT)
 		self.file_window.focus_force()
+		self.text2.focus_set()
 		
 	def inputHelper(self, self2):
 		inputted = self.text2.get("1.0",END)
