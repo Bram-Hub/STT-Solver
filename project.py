@@ -396,6 +396,7 @@ class GUI(object):
 		self.button5 = ""
 		self.fileName_error = ""
 		self.fileName_entered = False
+		self.text2 = ""
 		
 		self.table = []
 		self.current = -1 #current represents the state just printed out		
@@ -414,13 +415,37 @@ class GUI(object):
 		self.button7.config(state = DISABLED)
 				
 		
-		self.text2 = Text(self.file_window2)
+		self.text2 = Text(self.file_window)
 		self.text2.pack()
+		
+		#original ^^
+		file_frame = Frame(self.file_window)
+		file_frame.pack(side = BOTTOM)		
+		self.button5 = Button(file_frame, text="Enter")
+		self.file_window.bind('<Return><Return>', self.inputHelper)
+		self.button5.bind('<Button-1>', self.inputHelper)
+		self.button5.pack(side = RIGHT)
+		self.file_window.focus_force()
+		
+	def inputHelper(self, self2):
+		inputted = self.text2.get("1.0",END)
+		inputted = inputted.strip().split("\n")
+		for i in range(len(inputted)):
+			inputted[i] += "\n"
+			
+		self.fileName_entered = True
+		self.file_window.destroy()
+		self.enter_file(inputted)
+		
 		
 	def enterFileName(self):
 		start = os.getcwd() + "\\inputs"
 		self.parent.filename =  filedialog.askopenfilename(initialdir = start,title = "Select file",filetypes = (("txt files","*.txt"),("All files","*.*")))
-		self.enter_file(None)
+		try:
+			f = open(self.parent.filename).readlines()
+			self.enter_file(f)
+		except:
+			pass
 		
 	    
 	def enterFileNameAlt(self):
@@ -452,41 +477,33 @@ class GUI(object):
 		self.e1.focus_set()
 
 
-	def enter_file(self, self2):
+	def enter_file(self, f):
+		self.button7.config(state = NORMAL)		
 		try:
-			#fileName = self.e1.get()
-			fileName = self.parent.filename
-			self.button7.config(state = NORMAL)		
-			#try:
-			f = open(fileName).readlines()
-			try:
-				statements = parseInput(f)
-				self.table = solveTable(statements)	
-				self.button1.config(state = NORMAL)
-				#self.button2.config(state = NORMAL)
-				self.button3.config(state = NORMAL)
-				self.button4.config(state = NORMAL)
-				self.button6.config(state = NORMAL)
-		
-				self.current = -1
-				#self.fileName_entered = True
-				
-				#self.file_window.destroy()
-				
-				self.nextStep()				
-			except Exception as e:
-				self.text.config(state = NORMAL)
-				self.text.delete(1.0,END)
-				self.text.insert(END, str(e))
-				self.text.config(state = DISABLED)
-				
-				self.button2.config(state = DISABLED)
-				self.button3.config(state = DISABLED)
-				self.button4.config(state = DISABLED)
-				self.button6.config(state = DISABLED)
-				
-		except:	#cancel
-			pass
+			statements = parseInput(f)
+			self.table = solveTable(statements)	
+			self.button1.config(state = NORMAL)
+			#self.button2.config(state = NORMAL)
+			self.button3.config(state = NORMAL)
+			self.button4.config(state = NORMAL)
+			self.button6.config(state = NORMAL)
+	
+			self.current = -1
+			#self.fileName_entered = True
+			
+			#self.file_window.destroy()
+			
+			self.nextStep()				
+		except Exception as e:
+			self.text.config(state = NORMAL)
+			self.text.delete(1.0,END)
+			self.text.insert(END, str(e))
+			self.text.config(state = DISABLED)
+			
+			self.button2.config(state = DISABLED)
+			self.button3.config(state = DISABLED)
+			self.button4.config(state = DISABLED)
+			self.button6.config(state = DISABLED)
 		"""
 		except:
 			self.fileName_error = Toplevel(self.parent)
@@ -508,7 +525,7 @@ class GUI(object):
 	def callback_fileName_error(self):
 		self.button5.config(state = NORMAL)
 		self.e1.config(state = NORMAL)
-		self.file_window.bind('<Return>', self.enter_file)
+		self.file_window.bind('<Return><Return>', self.enter_file)
 		self.button5.bind('<Button-1>', self.enter_file)		
 		self.fileName_error.destroy()
 		
