@@ -244,7 +244,7 @@ def getStatement(line, i):
 			else:
 				#print('Invalid input file.')
 				#sys.exit()
-				raise Exception("Invalid input file.")
+				raise Exception("Invalid input.")
 			i += 1
 		elif line[i] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
 			if s.operation == '' and s.first == '':
@@ -254,11 +254,11 @@ def getStatement(line, i):
 			else:
 				#print('Invalid input file.')
 				#sys.exit()
-				raise Exception("Invalid input file.")
+				raise Exception("Invalid input.")
 		else:
 			#print('Invalid input file.')
 			#sys.exit()
-			raise Exception("Invalid input file.")
+			raise Exception("Invalid input.")
 
 		i += 1
 	if s.second == '':
@@ -373,7 +373,7 @@ class GUI(object):
 		
 		self.scrollbar.config( command = self.text.yview )		
 		
-		self.button7 = Button(self.top_frame, text="New", command=self.newFile)
+		self.button7 = Button(self.top_frame, text="New", command=self.createInput)
 		self.button7.pack(side=LEFT)
 		self.button1 = Button(self.top_frame, text="Open", command=self.enterFileName)
 		self.button1.pack(side=LEFT)
@@ -391,7 +391,7 @@ class GUI(object):
 		self.button4.config(state = DISABLED)
 		self.button6.config(state = DISABLED)
 		
-		self.e1 = ""
+		#self.e1 = ""
 		self.file_window = ""
 		self.button5 = ""
 		self.fileName_error = ""
@@ -401,8 +401,8 @@ class GUI(object):
 		self.table = []
 		self.current = -1 #current represents the state just printed out		
 		
-	#broken
-	def newFile(self):
+	#click New
+	def createInput(self):
 		self.file_window = Toplevel(self.parent)
 		self.file_window.title("New")
 		self.file_window.protocol("WM_DELETE_WINDOW", self.callback_file_window)
@@ -418,7 +418,6 @@ class GUI(object):
 		self.text2 = Text(self.file_window)
 		self.text2.pack()
 		
-		#original ^^
 		file_frame = Frame(self.file_window)
 		file_frame.pack(side = BOTTOM)		
 		self.button5 = Button(file_frame, text="Enter")
@@ -427,18 +426,18 @@ class GUI(object):
 		self.button5.pack(side = RIGHT)
 		self.file_window.focus_force()
 		self.text2.focus_set()
-		
+	
+	#click enter in createInput, will call enter_file
 	def inputHelper(self, self2):
 		inputted = self.text2.get("1.0",END)
 		inputted = inputted.strip().split("\n")
 		for i in range(len(inputted)):
 			inputted[i] += "\n"
 			
-		self.fileName_entered = True
 		self.file_window.destroy()
 		self.enter_file(inputted)
 		
-		
+	#click open (file browser)
 	def enterFileName(self):
 		start = os.getcwd() + "\\inputs"
 		self.parent.filename =  filedialog.askopenfilename(initialdir = start,title = "Select file",filetypes = (("txt files","*.txt"),("All files","*.*")))
@@ -448,7 +447,7 @@ class GUI(object):
 		except:
 			pass
 		
-	    
+	"""    
 	def enterFileNameAlt(self):
 		self.file_window = Toplevel(self.parent)
 		self.file_window.title("Enter file name")
@@ -476,8 +475,9 @@ class GUI(object):
 		self.button5.pack(side = RIGHT)
 		self.file_window.focus_force()
 		self.e1.focus_set()
+	"""
 
-
+	#parse inputs and create table
 	def enter_file(self, f):
 		self.button7.config(state = NORMAL)		
 		try:
@@ -490,9 +490,7 @@ class GUI(object):
 			self.button6.config(state = NORMAL)
 	
 			self.current = -1
-			#self.fileName_entered = True
-			
-			#self.file_window.destroy()
+			self.fileName_entered = True
 			
 			self.nextStep()				
 		except Exception as e:
@@ -505,31 +503,17 @@ class GUI(object):
 			self.button3.config(state = DISABLED)
 			self.button4.config(state = DISABLED)
 			self.button6.config(state = DISABLED)
-		"""
-		except:
-			self.fileName_error = Toplevel(self.parent)
-			self.fileName_error.title("File not found")
-			self.fileName_error.protocol("WM_DELETE_WINDOW", self.callback_fileName_error)
-			l2 = Label(self.fileName_error, text="File does not exist. Close this window and enter a new file to continue")
-			l2.pack()
-			self.fileName_error.lift()
-			self.fileName_error.focus_force()
-			
-			self.button5.config(state = DISABLED)
-			self.file_window.unbind('<Return>')
-			self.button5.unbind('<Button-1>')
-			
-			self.e1.config(state = DISABLED)
-		"""
-			
 		
+	"""
 	def callback_fileName_error(self):
 		self.button5.config(state = NORMAL)
 		self.e1.config(state = NORMAL)
-		self.file_window.bind('<Return><Return>', self.enter_file)
+		self.file_window.bind('<Return>', self.enter_file)
 		self.button5.bind('<Button-1>', self.enter_file)		
 		self.fileName_error.destroy()
-		
+	"""
+	
+	#click x on window
 	def callback_file_window(self):
 		self.button1.config(state = NORMAL)
 		self.button7.config(state = NORMAL)
