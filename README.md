@@ -8,7 +8,7 @@ Escher Campanella
 
 ## About
 To Run:
-Double click on STT-Solver.bat. Click open and enter the input file. Click enter to start solving problem.
+Double click on STT-Solver.bat. Click new and enter in statements (click enter on the keyboard twice when finished or press enter button). Can also click open and enter the input file. Click enter to start solving problem.
 
 Format of input file:
 - n lines

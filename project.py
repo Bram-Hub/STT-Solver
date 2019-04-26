@@ -499,6 +499,7 @@ class GUI(object):
 			self.text.insert(END, str(e))
 			self.text.config(state = DISABLED)
 			
+			self.button1.config(state = NORMAL)
 			self.button2.config(state = DISABLED)
 			self.button3.config(state = DISABLED)
 			self.button4.config(state = DISABLED)
