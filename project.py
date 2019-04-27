@@ -1,7 +1,9 @@
 # Jonathan Michaels
 # 5/6/14
 
-import sys
+from tkinter import *
+from tkinter import filedialog
+import os
 
 class Statement:
 	def __init__(self, first=''):
@@ -240,8 +242,9 @@ def getStatement(line, i):
 				s.second.operation = line[i]
 				s.second.first = Statement(line[i+1])
 			else:
-				print('Invalid input file.')
-				sys.exit()
+				#print('Invalid input file.')
+				#sys.exit()
+				raise Exception("Invalid input.")
 			i += 1
 		elif line[i] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
 			if s.operation == '' and s.first == '':
@@ -249,11 +252,13 @@ def getStatement(line, i):
 			elif s.second == '':
 				s.second = Statement(line[i])
 			else:
-				print('Invalid input file.')
-				sys.exit()
+				#print('Invalid input file.')
+				#sys.exit()
+				raise Exception("Invalid input.")
 		else:
-			print('Invalid input file.')
-			sys.exit()
+			#print('Invalid input file.')
+			#sys.exit()
+			raise Exception("Invalid input.")
 
 		i += 1
 	if s.second == '':
@@ -296,6 +301,8 @@ def isComplete(statements):
 
 
 def solveTable(statements):
+	result = []
+	
 	global changedLiterals
 	changedLiterals = dict()
 
@@ -303,17 +310,17 @@ def solveTable(statements):
 		statement.assignment = True
 	statements[-1].assignment = False
 
-	print('Original Statements:')
+	result.append('Original Statements:\n')
 	for statement in range(len(statements)):
-		print(str(statement + 1) + ': ' + str(statements[statement]))
+		result[0] += str(statement + 1) + ': ' + str(statements[statement]) + "\n"
 
 	count = 0
 	while True:
 		# look for contradiction
 		for statement in range(len(statements)):
 			if not statements[statement].isValid():
-				print('\nContradiction found in Statement ' + str(statement + 1) + '! Therefore, this is valid.')
-				return
+				result[-1] += '\nContradiction found in Statement ' + str(statement + 1) + '! Therefore, this is valid.\n'
+				return result
 
 		# see if any literal's truth value needs to be propogated to all statements
 		if len(changedLiterals) > 0:
@@ -334,31 +341,240 @@ def solveTable(statements):
 			# no assignment was forced. check if the statements are complete
 			else:
 				if isComplete(statements):
-					print('\nNo contradiction found! Therefore, this is invalid.')
+					result[-1] += '\nNo contradiction found! Therefore, this is invalid.\n'
 				else:
-					print('\nNo forced move')
-				return
+					result[-1] += '\nNo forced move\n'
+				return result
 
-		input()
+		#input()
 		count += 1
-		print('\nStep ' + str(count) + ' - ' + toPrint)
+		result.append('Step ' + str(count) + ' - ' + toPrint + "\n")
 		for statement in range(len(statements)):
-			print(str(statement + 1) + ': ' + str(statements[statement]))
+			result[-1] += str(statement + 1) + ': ' + str(statements[statement]) + "\n"	
+
+
+class GUI(object):
+	def __init__(self, parent):
+		self.parent = parent
+		self.parent.title("STT-Solver")
+		self.main_frame = Frame(self.parent)
+		self.main_frame.pack() 
+		self.top_frame = Frame(self.main_frame)
+		self.top_frame.pack(side=TOP)
+		
+		self.bottom_frame = Frame(self.main_frame)
+		self.bottom_frame.pack(side=BOTTOM)
+		
+		self.scrollbar = Scrollbar(self.parent)
+		self.scrollbar.pack( side = RIGHT, fill = Y )	
+		
+		self.text = Text(self.parent, yscrollcommand = self.scrollbar.set, state = DISABLED)
+		self.text.pack()
+		
+		self.scrollbar.config( command = self.text.yview )
+		
+		self.button7 = Button(self.top_frame, text="New", command=self.createInput)
+		self.button7.pack(side=LEFT)
+		self.button1 = Button(self.top_frame, text="Open", command=self.enterFileName)
+		self.button1.pack(side=LEFT)
+		self.button2 = Button(self.top_frame, text="Prev Step", command=self.prevStep)
+		self.button2.pack(side=LEFT)
+		self.button3=Button(self.top_frame, text="Next Step", command=self.nextStep)
+		self.button3.pack(side=LEFT)
+		self.button4=Button(self.top_frame, text="Show All Steps", command=self.showAllSteps)
+		self.button4.pack(side=LEFT)		
+		self.button6 = Button(self.top_frame, text = "Last Step", command = self.lastStep)
+		self.button6.pack(side = LEFT)
+		
+		self.button2.config(state = DISABLED)
+		self.button3.config(state = DISABLED)
+		self.button4.config(state = DISABLED)
+		self.button6.config(state = DISABLED)
+		
+		#self.e1 = ""
+		self.file_window = ""
+		self.button5 = ""
+		self.fileName_error = ""
+		self.fileName_entered = False
+		self.text2 = ""
+		self.scrollbar2 = ""
+		
+		self.table = []
+		self.current = -1 #current represents the state just printed out		
+		
+	#click New
+	def createInput(self):
+		self.file_window = Toplevel(self.parent)
+		self.file_window.title("New")
+		self.file_window.protocol("WM_DELETE_WINDOW", self.callback_file_window)
+		
+		self.button1.config(state = DISABLED)
+		self.button2.config(state = DISABLED)
+		self.button3.config(state = DISABLED)
+		self.button4.config(state = DISABLED)
+		self.button6.config(state = DISABLED)
+		self.button7.config(state = DISABLED)
+				
+		self.scrollbar2 = Scrollbar(self.file_window)
+		self.scrollbar2.pack( side = RIGHT, fill = Y )	
+		
+		self.text2 = Text(self.file_window, yscrollcommand = self.scrollbar2.set)
+		self.text2.pack()
+		
+		self.scrollbar2.config(command = self.text2.yview)
+		
+		file_frame = Frame(self.file_window)
+		file_frame.pack(side = BOTTOM)		
+		self.button5 = Button(file_frame, text="Enter")
+		self.file_window.bind('<Return><Return>', self.inputHelper) #press enter twice to return
+		self.button5.bind('<Button-1>', self.inputHelper)
+		self.button5.pack(side = RIGHT)
+		self.file_window.focus_force()
+		self.text2.focus_set()
+	
+	#click enter in createInput, will call enter_file
+	def inputHelper(self, self2):
+		inputted = self.text2.get("1.0",END)
+		inputted = inputted.strip().split("\n")
+		for i in range(len(inputted)):
+			inputted[i] += "\n"
+			
+		self.file_window.destroy()
+		self.enter_file(inputted)
+		
+	#click open (file browser)
+	def enterFileName(self):
+		start = os.getcwd() + "\\inputs"
+		self.parent.filename =  filedialog.askopenfilename(initialdir = start,title = "Select file",filetypes = ((".txt Files","*.txt"),("All files","*.*")))
+		try:
+			file = open(self.parent.filename)
+			f = file.readlines()
+			file.close()
+			self.enter_file(f)
+		except:
+			pass
+		
+	"""    
+	def enterFileNameAlt(self):
+		self.file_window = Toplevel(self.parent)
+		self.file_window.title("Enter file name")
+		self.file_window.protocol("WM_DELETE_WINDOW", self.callback_file_window)
+		
+		self.button1.config(state = DISABLED)
+		self.button2.config(state = DISABLED)
+		self.button3.config(state = DISABLED)
+		self.button4.config(state = DISABLED)
+		self.button6.config(state = DISABLED)
+		self.button7.config(state = DISABLED)
+				
+		l1 = Label(self.file_window, text="File Name")
+		l1.pack( side = LEFT)		
+		
+		self.e1 = Entry(self.file_window, bd =5)
+		self.e1.pack(side = LEFT)
+		
+		file_frame = Frame(self.file_window)
+		file_frame.pack(side = BOTTOM)			
+		
+		self.button5 = Button(file_frame, text="Enter")
+		self.file_window.bind('<Return>', self.enter_file)
+		self.button5.bind('<Button-1>', self.enter_file)
+		self.button5.pack(side = RIGHT)
+		self.file_window.focus_force()
+		self.e1.focus_set()
+	"""
+
+	#parse inputs and create table
+	def enter_file(self, f):
+		self.button7.config(state = NORMAL)		
+		try:
+			statements = parseInput(f)
+			self.table = solveTable(statements)	
+			self.button1.config(state = NORMAL)
+			#self.button2.config(state = NORMAL)
+			self.button3.config(state = NORMAL)
+			self.button4.config(state = NORMAL)
+			self.button6.config(state = NORMAL)
+	
+			self.current = -1
+			self.fileName_entered = True
+			
+			self.nextStep()				
+		except Exception as e:
+			self.text.config(state = NORMAL)
+			self.text.delete(1.0,END)
+			self.text.insert(END, str(e))
+			self.text.config(state = DISABLED)
+			
+			self.button1.config(state = NORMAL)
+			self.button2.config(state = DISABLED)
+			self.button3.config(state = DISABLED)
+			self.button4.config(state = DISABLED)
+			self.button6.config(state = DISABLED)
+		
+	"""
+	def callback_fileName_error(self):
+		self.button5.config(state = NORMAL)
+		self.e1.config(state = NORMAL)
+		self.file_window.bind('<Return>', self.enter_file)
+		self.button5.bind('<Button-1>', self.enter_file)		
+		self.fileName_error.destroy()
+	"""
+	
+	#click x on window
+	def callback_file_window(self):
+		self.button1.config(state = NORMAL)
+		self.button7.config(state = NORMAL)
+		if self.fileName_entered == True:
+			self.button3.config(state = NORMAL)
+			self.button4.config(state = NORMAL)
+			self.button6.config(state = NORMAL)			
+		try:
+			self.fileName_error.destroy()
+			self.file_window.destroy()
+		except:
+			self.file_window.destroy()
+		
+
+	def prevStep(self):
+		self.current -= 2
+		self.nextStep();
+		self.button3.config(state = NORMAL)
+		if self.current == 0:
+			self.button2.config(state = DISABLED)
+		
+	
+	def nextStep(self):
+		self.current += 1
+		self.text.config(state = NORMAL)
+		self.text.delete(1.0,END)
+		self.text.insert(END, self.table[self.current])
+		self.text.config(state = DISABLED)
+		self.button2.config(state = NORMAL)
+		
+		if self.current == 0:
+			self.button2.config(state = DISABLED)
+		if self.current == len(self.table)-1:
+			self.button3.config(state = DISABLED)
+		else:
+			self.button3.config(state = NORMAL)		
+		
+	def lastStep(self):
+		self.current = len(self.table) - 2
+		self.nextStep();		
+	
+	def showAllSteps(self):
+		self.current = len(self.table) - 1
+		self.text.config(state = NORMAL)
+		self.text.delete(1.0,END)
+		for i in range(len(self.table)):
+			self.text.insert(END, self.table[i])		
+		self.text.config(state = DISABLED)
+		self.button3.config(state = DISABLED)
+		self.button2.config(state = NORMAL)
 	
 
-if len(sys.argv) != 2:
-	# ask for input file if none is provided
-	if len(sys.argv) == 1:
-		sys.argv.append(input("Enter input file: "))
-	else:
-		print('Invalid command line arguments.')
-		sys.exit()
-
-f = open(sys.argv[1]).readlines()
-statements = parseInput(f)
-solveTable(statements)
-
-
-
-
-
+if __name__ == "__main__":
+	root = Tk()
+	gui = GUI(root)
+	root.mainloop()	
