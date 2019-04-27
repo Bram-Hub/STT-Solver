@@ -371,7 +371,7 @@ class GUI(object):
 		self.text = Text(self.parent, yscrollcommand = self.scrollbar.set, state = DISABLED)
 		self.text.pack()
 		
-		self.scrollbar.config( command = self.text.yview )		
+		self.scrollbar.config( command = self.text.yview )
 		
 		self.button7 = Button(self.top_frame, text="New", command=self.createInput)
 		self.button7.pack(side=LEFT)
@@ -397,6 +397,7 @@ class GUI(object):
 		self.fileName_error = ""
 		self.fileName_entered = False
 		self.text2 = ""
+		self.scrollbar2 = ""
 		
 		self.table = []
 		self.current = -1 #current represents the state just printed out		
@@ -414,14 +415,18 @@ class GUI(object):
 		self.button6.config(state = DISABLED)
 		self.button7.config(state = DISABLED)
 				
+		self.scrollbar2 = Scrollbar(self.file_window)
+		self.scrollbar2.pack( side = RIGHT, fill = Y )	
 		
-		self.text2 = Text(self.file_window)
+		self.text2 = Text(self.file_window, yscrollcommand = self.scrollbar2.set)
 		self.text2.pack()
+		
+		self.scrollbar2.config(command = self.text2.yview)
 		
 		file_frame = Frame(self.file_window)
 		file_frame.pack(side = BOTTOM)		
 		self.button5 = Button(file_frame, text="Enter")
-		self.file_window.bind('<Return><Return>', self.inputHelper)
+		self.file_window.bind('<Return><Return>', self.inputHelper) #press enter twice to return
 		self.button5.bind('<Button-1>', self.inputHelper)
 		self.button5.pack(side = RIGHT)
 		self.file_window.focus_force()
@@ -440,9 +445,11 @@ class GUI(object):
 	#click open (file browser)
 	def enterFileName(self):
 		start = os.getcwd() + "\\inputs"
-		self.parent.filename =  filedialog.askopenfilename(initialdir = start,title = "Select file",filetypes = (("txt files","*.txt"),("All files","*.*")))
+		self.parent.filename =  filedialog.askopenfilename(initialdir = start,title = "Select file",filetypes = ((".txt Files","*.txt"),("All files","*.*")))
 		try:
-			f = open(self.parent.filename).readlines()
+			file = open(self.parent.filename)
+			f = file.readlines()
+			file.close()
 			self.enter_file(f)
 		except:
 			pass
