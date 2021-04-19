@@ -1,5 +1,7 @@
 # Jonathan Michaels
 # 5/6/14
+#Edited by Cameron Arsenault and Quin Emerling 
+#for UI and additional comments 4/20/21
 
 import sys
 
@@ -198,7 +200,7 @@ class Statement:
 		return firstLine + '\n   ' + secondLine
 
 
-# parse the input file
+# parse the input line
 def getStatement(line, i):
 	s = Statement()
 	while i < len(line):
@@ -261,7 +263,7 @@ def getStatement(line, i):
 	else:
 		return s, i
 
-
+#Parses each line, adding it to a statement list. 
 def parseInput(f):
 	statements = []
 	for line in f:
@@ -295,10 +297,12 @@ def isComplete(statements):
 	return True
 
 
+#The nitty gritty solving of the short truth table
 def solveTable(statements):
 	global changedLiterals
 	changedLiterals = dict()
 
+	#Setting the final statement as false, and the premises as true
 	for statement in statements[:-1]:
 		statement.assignment = True
 	statements[-1].assignment = False
@@ -309,7 +313,7 @@ def solveTable(statements):
 
 	count = 0
 	while True:
-		# look for contradiction
+		# look for contradiction, ending if we found one, since we then know it is a valid argument
 		for statement in range(len(statements)):
 			if not statements[statement].isValid():
 				print('\nContradiction found in Statement ' + str(statement + 1) + '! Therefore, this is valid.')
@@ -346,6 +350,7 @@ def solveTable(statements):
 			print(str(statement + 1) + ': ' + str(statements[statement]))
 	
 
+#Main begins here
 if len(sys.argv) != 2:
 	# ask for input file if none is provided
 	if len(sys.argv) == 1:
@@ -354,6 +359,7 @@ if len(sys.argv) != 2:
 		print('Invalid command line arguments.')
 		sys.exit()
 
+#Reading input
 f = open(sys.argv[1]).readlines()
 statements = parseInput(f)
 solveTable(statements)
