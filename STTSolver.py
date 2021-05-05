@@ -156,10 +156,25 @@ class STTUI:
     #Parses each line, translating it into a Statement and adds it to a statement list.
     def parseInput(self, f):
         self.statements = []
+        self.starting_truth_vars = ''
         for line in f:
-            s, temp = self.getStatement(line.strip(), 0)
+            input_line = line.strip()
+            if input_line == '' or input_line == '\n' or input_line == ' ': #Skips new lines
+                continue
+            if input_line[0] == '=':
+                self.starting_truth_vars = False
+                input_line = input_line[1:]
+            elif input_line[0] == '+':
+                self.starting_truth_vars = True
+                input_line = input_line[1:]
+            else:
+                tk.messagebox.showerror("error", "Invalid input. Please include initial truth values.")
+                self.error.set(1)
+                break
+            s, temp = self.getStatement(input_line, 0)
             if self.error.get() == 1:
                 break
+            s.starting_value = self.starting_truth_vars
             self.statements.append(s)
         return self.statements
 
@@ -195,9 +210,8 @@ class STTUI:
         changedLiterals = dict()
 
         #Setting the final statement as false, and the premises as true
-        for statement in statements[:-1]:
-            statement.assignment = True
-        statements[-1].assignment = True
+        for statement in statements:
+            statement.assignment = statement.starting_value
 
         #Print opening statement
         self.entry.config(state='normal')
@@ -219,7 +233,7 @@ class STTUI:
             for statement in range(len(statements)):
                 if not statements[statement].isValid():
                     self.entry.config(state='normal')
-                    self.entry.insert(tk.END, 'Contradiction found in Statement ' + str(statement + 1) + '! Therefore, this is valid.\n')
+                    self.entry.insert(tk.END, 'Contradiction found in Statement ' + str(statement + 1) + '\n')
                     self.entry.config(state='disabled')
                     self.start.config(state='disabled')
                     self.auto.config(state='disabled')
@@ -241,13 +255,13 @@ class STTUI:
             else:
                 statement = self.forceAssignment(statements)
                 if statement != -1:
-                    toPrint = 'Forced assignment in Statement ' + str(statement + 1)
+                    toPrint = 'Forced assignment in Statement ' + str(statement + 1) + '\n'
 
                 # no assignment was forced. check if the statements are complete
                 else:
                     if self.isComplete(statements):
                         self.entry.config(state='normal')
-                        self.entry.insert(tk.END,'\nNo contradiction found! Therefore, this is invalid.\n')
+                        self.entry.insert(tk.END,'\nNo contradiction found!\n')
                         self.entry.config(state='disabled')
                         self.start.config(state='disabled')
                         self.auto.config(state='disabled')
@@ -342,7 +356,7 @@ class STTUI:
         self.help_text.grid()
         self.help_text.insert("1.0", '''Valid Input Symbols:\nNOT : ~\nAND : &\nOR : |\nCONDITIONAL : ->\nBICONDITIONAL : <->\n
 Possible literals are any capital letter\nSeparate premises with newline characters. 
-The final line will always be assumed to be the conclusion.\nUse the scrollwheel to see next steps that go beyond the box.\n\nFILE IMPORT: Select a txt file to put in the entry box\nGURL HELP: Finds this window (you already did it!)
+Denote starting truth values using + for true and = for false. Put these at the start of each expression.\nUse the scrollwheel to see next steps that go beyond the box.\n\nFILE IMPORT: Select a txt file to put in the entry box\nGURL HELP: Finds this window (you already did it!)
 START: Press start after inputing premises and conclusion to begin.\nNEXT: Procedes to the next step.\nAUTO-COMPLETE: Automatically displays all steps.
 RESET: Sets the program to its default state, removing any current text.\nDo this especially when in the middle of a proof.\nSAVE: Saves anything in the text box to a desired location as a txt file.''')
         self.help_text.config(state="disabled")
@@ -394,6 +408,7 @@ class Statement:
         self.second = ''
         self.operation = ''
         self._assignment = ''
+        self.starting_value = ''
 
     @property
     def assignment(self):
